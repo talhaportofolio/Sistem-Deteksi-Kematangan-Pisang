@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
-// --- SUPABASE CONFIG (GANTI INI DENGAN DATA ANDA) ---
-const SUPABASE_URL = 'https://ltsskquetmcpxcnbsoah.supabase.co'; // Ganti dengan Project URL
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0c3NrcXVldG1jcHhjbmJzb2FoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1NTUxNjIsImV4cCI6MjA4MDEzMTE2Mn0.FjCAySw1l0ppUQVS7SuviAPAHnQAo_BbcaUV2ck7z6U'; // Ganti dengan Anon Key
+// --- SUPABASE CONFIG ---
+const SUPABASE_URL = 'https://ltsskquetmcpxcnbsoah.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0c3NrcXVldG1jcHhjbmJzb2FoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1NTUxNjIsImV4cCI6MjA4MDEzMTE2Mn0.FjCAySw1l0ppUQVS7SuviAPAHnQAo_BbcaUV2ck7z6U';
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// --- DEFINISI SVG ICON ---
+// --- ICONS ---
 const ArrowLeft = (props) => (<svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 19-7-7 7-7" /><path d="M19 12H5" /></svg>);
 const Instagram = (props) => (<svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" x2="17.51" y1="6.5" y2="6.5" /></svg>);
 const ShoppingBag = (props) => (<svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 0 1-8 0" /></svg>);
@@ -21,10 +21,9 @@ const LockIcon = (props) => (<svg {...props} xmlns="http://www.w3.org/2000/svg" 
 const Info = (props) => (<svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>);
 const ImageIcon = (props) => (<svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /><circle cx="9" cy="9" r="2" /><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" /></svg>);
 const Camera = (props) => (<svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>);
-// Alias
-const LockKeyhole = LockIcon; const LockOpen = LockIcon; const Trash2 = TrashIcon; const Edit = EditIcon; const Plus = PlusIcon;
+const LockKeyhole = LockIcon; 
 
-// --- CONSTANTS & HELPERS ---
+// --- HELPERS ---
 const BLOCK_LIMITS = { 'A': 12, 'B': 12, 'C': 12, 'D': 6 };
 const formatRupiah = (price) => `Rp ${price.toLocaleString('id-ID')}`;
 const formatRupiahInput = (value) => {
@@ -62,7 +61,6 @@ const resizeImage = (file, maxWidth = 1000) => {
   });
 };
 
-// --- SUPABASE UPLOAD HELPER ---
 const dataURLtoFile = (dataurl, filename) => {
     const arr = dataurl.split(','); const mime = arr[0].match(/:(.*?);/)[1];
     const bstr = atob(arr[1]); let n = bstr.length; const u8arr = new Uint8Array(n);
@@ -71,7 +69,7 @@ const dataURLtoFile = (dataurl, filename) => {
 };
 
 const uploadImageToSupabase = async (base64Image, folder) => {
-    if (!base64Image || !base64Image.startsWith('data:')) return base64Image; // Sudah URL atau null
+    if (!base64Image || !base64Image.startsWith('data:')) return base64Image;
     const timestamp = Date.now();
     const fileName = `${folder}/img-${timestamp}.jpg`;
     const file = dataURLtoFile(base64Image, fileName);
@@ -83,7 +81,6 @@ const uploadImageToSupabase = async (base64Image, folder) => {
 
 // --- COMPONENTS ---
 const SmartImage = ({ srcLocal, srcOnline, alt, className, onClick }) => {
-  // Logic simplified for Supabase: prioritize Online URL
   const imgSrc = srcOnline || srcLocal;
   return imgSrc ? 
     <img src={imgSrc} alt={alt} className={className} onClick={() => onClick && onClick(imgSrc)} style={{ cursor: onClick ? 'pointer' : 'default' }} onError={(e) => {e.target.style.display='none';}} /> 
@@ -100,12 +97,6 @@ const useSecretTap = (callback) => {
     useEffect(() => { if (taps > 0) { const timer = setTimeout(() => setTaps(0), 2000); return () => clearTimeout(timer); } }, [taps]);
     useEffect(() => { if (taps >= 3) { callback(); setTaps(0); } }, [taps, callback]);
     return () => setTaps(prev => prev + 1);
-};
-
-// ... (Komponen AdminLogin, LandingPage tidak berubah banyak, disertakan di bawah) ...
-const AdminLogin = ({ onLogin, onCancel }) => {
-    const [password, setPassword] = useState(''); const [error, setError] = useState('');
-    return (<div className="flex flex-col items-center"><div className="flex justify-center mb-4"><div className="bg-slate-100 p-3 rounded-full"><LockIcon className="w-6 h-6 text-[#0B2545]" /></div></div><h3 className="text-center font-bold text-[#0B2545] mb-2">Admin Login</h3><p className="text-center text-xs text-slate-400 mb-4">Klik 3x pada Logo untuk Membuka.</p><form onSubmit={(e) => { e.preventDefault(); password === 'admin123' ? onLogin() : setError('Password salah!'); }} className="w-full"><input type="password" autoFocus className="w-full text-center text-2xl tracking-widest border border-slate-300 rounded-lg p-2 mb-4 focus:ring-2 focus:ring-[#0B2545] outline-none" value={password} onChange={(e) => { setPassword(e.target.value); setError(''); }} placeholder="••••" maxLength={4} />{error && <p className="text-center text-xs text-red-500 font-bold mb-3">{error}</p>}<div className="flex gap-2"><button type="button" onClick={onCancel} className="flex-1 py-2 text-sm font-bold text-slate-500 bg-slate-100 rounded-lg hover:bg-slate-200">Batal</button><button type="submit" className="flex-1 py-2 text-sm font-bold text-white bg-[#0B2545] rounded-lg hover:bg-[#163A66]">Masuk</button></div></form></div>);
 };
 
 const LandingPage = ({ onGoToList, animationClass, onSecretTrigger }) => {
@@ -184,7 +175,7 @@ const OutletListPage = ({ onBack, onOpenMenu, animationClass, outlets, allMenus,
 };
 
 const MenuPage = ({ onBack, outlet, animationClass, onZoomImage, menuList, isAdmin, onAddMenu, onRequestDeleteMenu, onRequestEditMenu, onRequestEditOutlet }) => {
- const specialMenus = menuList.filter(m => m.is_special === true); // Filter berdasarkan Flag di DB
+ const specialMenus = menuList.filter(m => m.is_special === true); 
  const otherMenus = menuList.filter(m => m.is_special !== true);
  const getBadgeColor = (code) => { if (!code) return 'bg-gray-500 text-white'; if (code.startsWith('A')) return 'bg-yellow-500 text-white'; if (code.startsWith('B')) return 'bg-blue-600 text-white'; if (code.startsWith('C')) return 'bg-orange-500 text-white'; if (code.startsWith('D')) return 'bg-emerald-600 text-white'; return 'bg-gray-500 text-white'; };
  const getBadgeText = (code) => { if (!code) return 'text-gray-500'; if (code.startsWith('A')) return 'text-yellow-500'; if (code.startsWith('B')) return 'text-blue-600'; if (code.startsWith('C')) return 'text-orange-500'; if (code.startsWith('D')) return 'text-emerald-600'; return 'text-gray-500'; };
@@ -192,67 +183,28 @@ const MenuPage = ({ onBack, outlet, animationClass, onZoomImage, menuList, isAdm
  return (
    <div className={`min-h-screen bg-slate-50 font-inter pb-20 ${animationClass}`}>
      <div className="bg-white sticky top-0 z-50 shadow-sm py-4"><div className="px-4 flex items-center justify-between"><div className="flex items-center gap-4"><button onClick={onBack} className="p-2 -ml-2 rounded-full hover:bg-slate-100 transition-colors"><ArrowLeft className="w-6 h-6 text-[#0B2545]" /></button><h2 className="text-xl font-bold text-[#0B2545]">{outlet?.name}</h2></div></div></div>
-    <div className="p-4 space-y-6">
+     <div className="p-4 space-y-6">
          <div className="w-full h-56 rounded-2xl overflow-hidden shadow-lg relative bg-slate-200"><SmartImage srcOnline={outlet?.imageOnline} alt={outlet?.name} className="w-full h-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div><div className={`absolute bottom-4 left-4 p-1.5 rounded-full shadow-lg ${getBadgeColor(outlet?.code)}`}><div className="w-10 h-10 rounded-full bg-white flex items-center justify-center"><span className={`font-bold text-lg ${getBadgeText(outlet?.code)}`}>{outlet?.code}</span></div></div></div>
          
-         <div><div className="flex justify-between items-center mb-4"><h3 className="font-bold text-lg text-black">Menu Spesial</h3>{isAdmin && (<button onClick={() => onAddMenu('special')} className="bg-[#0B2545] text-white px-3 py-1.5 rounded-full shadow-lg hover:bg-blue-900 transition-colors flex items-center gap-1 text-xs font-bold whitespace-nowrap"><PlusIcon className="w-3 h-3" /> Menu</button>)}</div>{specialMenus.length > 0 ? (<div className="grid grid-cols-2 gap-4">{specialMenus.map((menu) => (<div key={menu.id} className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition-all relative group">{isAdmin && (<div className="absolute top-2 right-2 z-10 flex gap-1"><button onClick={() => onRequestEditMenu(menu)} className="bg-yellow-500 text-white p-1 rounded-full shadow-md"><EditIcon className="w-3 h-3" /></button><button onClick={() => onRequestDeleteMenu(menu)} className="bg-red-500 text-white p-1 rounded-full shadow-md"><TrashIcon className="w-3 h-3" /></button></div>)}<div className="h-32 w-full relative bg-slate-100"><SmartImage srcOnline={menu.imageOnline} alt={menu.name} className="w-full h-full object-cover" onClick={(src) => onZoomImage(src)} /></div><div className="p-3"><h4 className="font-bold text-slate-800 text-sm mb-1 leading-tight">{menu.name}</h4><p className="text-[#0B2545] font-bold text-xs mb-2">{formatRupiah(menu.price)}</p></div></div>))}</div>) : <div className="text-center py-8 text-slate-400 bg-slate-50 rounded-xl"><p className="text-sm">Belum ada menu spesial.</p></div>}</div>
-
-         {(otherMenus.length > 0 || isAdmin) && (<div><div className="flex justify-between items-center mb-4"><h3 className="font-bold text-lg text-black">Menu Lainnya</h3>{isAdmin && (<button onClick={() => onAddMenu('other')} className="bg-[#0B2545] text-white px-3 py-1.5 rounded-full shadow-lg hover:bg-blue-900 transition-colors flex items-center gap-1 text-xs font-bold whitespace-nowrap"><PlusIcon className="w-3 h-3" /> Menu</button>)}</div>{otherMenus.length > 0 ? (<div className="grid grid-cols-3 gap-2">{otherMenus.map((menu) => (<div key={menu.id} className="bg-white rounded-lg shadow-sm border border-slate-100 p-2 flex flex-col justify-between hover:shadow-md transition-all text-center h-full relative">{isAdmin && (<div className="absolute top-1 right-1 z-10 flex gap-1"><button onClick={() => onRequestEditMenu(menu)} className="text-yellow-500 bg-white rounded-full p-0.5 shadow"><EditIcon className="w-3 h-3" /></button><button onClick={() => onRequestDeleteMenu(menu)} className="text-red-500 bg-white rounded-full p-0.5 shadow"><XIcon className="w-4 h-4" /></button></div>)}<h4 className="font-bold text-slate-800 text-[10px] leading-tight mb-1">{menu.name}</h4><p className="text-[#0B2545] font-bold text-[10px]">{formatRupiah(menu.price)}</p></div>))}</div>) : (isAdmin ? <div className="text-center py-4 text-slate-400 bg-slate-50 rounded-xl"><p className="text-xs">Belum ada menu lainnya.</p></div> : null)}</div>)}
-
-        <div className="mt-8 border-t border-slate-200 pt-6">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="font-bold text-lg text-[#0B2545]">Info & Pemesanan</h3>
-            {isAdmin && (<button onClick={() => onRequestEditOutlet(outlet)} className="bg-[#0B2545] text-white text-xs px-3 py-1.5 rounded-full flex items-center gap-1 hover:bg-blue-900 transition-colors"><EditIcon className="w-3 h-3" /> Edit Info</button>)}
-          </div>
-
-          <div className="space-y-4 bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 flex items-center justify-center text-white shrink-0"><Instagram className="w-5 h-5" /></div>
-              <div>
-                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Instagram</p>
-                <p className="text-sm font-bold text-slate-700">{outlet?.ig ? `@${outlet.ig}` : `@${outlet?.name.replace(/\s+/g, '').toLowerCase()}_sb`}</p>
-              </div>
+         <div>
+            <div className="flex justify-between items-center mb-4">
+                <h3 className="font-bold text-lg text-black">Menu Spesial</h3>
+                {isAdmin && (<button onClick={() => onAddMenu('special')} className="bg-[#0B2545] text-white px-3 py-1.5 rounded-full shadow-lg hover:bg-blue-900 transition-colors flex items-center gap-1 text-xs font-bold whitespace-nowrap"><PlusIcon className="w-3 h-3" /> Menu</button>)}
             </div>
+            {specialMenus.length > 0 ? (<div className="grid grid-cols-2 gap-4">{specialMenus.map((menu) => (<div key={menu.id} className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition-all relative group">{isAdmin && (<div className="absolute top-2 right-2 z-10 flex gap-1"><button onClick={() => onRequestEditMenu(menu)} className="bg-yellow-500 text-white p-1 rounded-full shadow-md"><EditIcon className="w-3 h-3" /></button><button onClick={() => onRequestDeleteMenu(menu)} className="bg-red-500 text-white p-1 rounded-full shadow-md"><TrashIcon className="w-3 h-3" /></button></div>)}<div className="h-32 w-full relative bg-slate-100"><SmartImage srcOnline={menu.imageOnline} alt={menu.name} className="w-full h-full object-cover" onClick={(src) => onZoomImage(src)} /></div><div className="p-3"><h4 className="font-bold text-slate-800 text-sm mb-1 leading-tight">{menu.name}</h4><p className="text-[#0B2545] font-bold text-xs mb-2">{formatRupiah(menu.price)}</p></div></div>))}</div>) : <div className="text-center py-8 text-slate-400 bg-slate-50 rounded-xl"><p className="text-sm">Belum ada menu spesial.</p></div>}
+         </div>
 
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center text-green-600 shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h2.2a2 2 0 011.8 1.2l.7 1.8a2 2 0 01-.5 2.1L7.6 9.9a11 11 0 005.5 5.5l1.6-1.1a2 2 0 012.1-.5l1.8.7A2 2 0 0121 18.8V21a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"/>
-                </svg>
-              </div>
-              <div>
-                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">WhatsApp</p>
-                <p className="text-sm font-bold text-slate-700">{outlet?.wa ? outlet.wa : '-'}</p>
-              </div>
+         {(otherMenus.length > 0 || isAdmin) && (
+            <div>
+                <div className="flex justify-between items-center mb-4">
+                    <h3 className="font-bold text-lg text-black">Menu Lainnya</h3>
+                    {/* TOMBOL + MENU SUDAH DIHAPUS DARI SINI SESUAI PERMINTAAN */}
+                </div>
+                {otherMenus.length > 0 ? (<div className="grid grid-cols-3 gap-2">{otherMenus.map((menu) => (<div key={menu.id} className="bg-white rounded-lg shadow-sm border border-slate-100 p-2 flex flex-col justify-between hover:shadow-md transition-all text-center h-full relative">{isAdmin && (<div className="absolute top-1 right-1 z-10 flex gap-1"><button onClick={() => onRequestEditMenu(menu)} className="text-yellow-500 bg-white rounded-full p-0.5 shadow"><EditIcon className="w-3 h-3" /></button><button onClick={() => onRequestDeleteMenu(menu)} className="text-red-500 bg-white rounded-full p-0.5 shadow"><XIcon className="w-4 h-4" /></button></div>)}<h4 className="font-bold text-slate-800 text-[10px] leading-tight mb-1">{menu.name}</h4><p className="text-[#0B2545] font-bold text-[10px]">{formatRupiah(menu.price)}</p></div>))}</div>) : (isAdmin ? <div className="text-center py-4 text-slate-400 bg-slate-50 rounded-xl"><p className="text-xs">Belum ada menu lainnya.</p></div> : null)}
             </div>
+         )}
 
-            <div className="h-px bg-slate-100 my-2"></div>
-
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-white border border-slate-100 flex items-center justify-center shrink-0 p-1"><svg viewBox="0 0 24 24" className="w-full h-full text-green-600 fill-current"><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="4" fill="white" /></svg></div>
-              <div>
-                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">GoFood</p>
-                <p className="text-sm font-bold text-slate-700">{outlet.gofood || outlet.name}</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center text-white shrink-0 p-1.5"><ShoppingBag className="w-full h-full stroke-white" /></div>
-              <div>
-                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">ShopeeFood</p>
-                <p className="text-sm font-bold text-slate-700">{outlet.shopee || outlet.name}</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center text-white shrink-0 p-1"><span className="font-bold text-[10px] italic">Grab</span></div>
-              <div>
-                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">GrabFood</p>
-                <p className="text-sm font-bold text-slate-700">{outlet.grab || outlet.name}</p>
-              </div>
-            </div>
-          </div>
-        </div>
+         <div className="mt-8 border-t border-slate-200 pt-6"><div className="flex justify-between items-center mb-4"><h3 className="font-bold text-lg text-[#0B2545]">Info & Pemesanan</h3>{isAdmin && (<button onClick={() => onRequestEditOutlet(outlet)} className="bg-[#0B2545] text-white text-xs px-3 py-1.5 rounded-full flex items-center gap-1 hover:bg-blue-900 transition-colors"><EditIcon className="w-3 h-3" /> Edit Info</button>)}</div><div className="space-y-4 bg-white p-4 rounded-2xl shadow-sm border border-slate-100"><div className="flex items-center gap-3"><div className="w-8 h-8 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 flex items-center justify-center text-white shrink-0"><Instagram className="w-5 h-5" /></div><div><p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Instagram</p><p className="text-sm font-bold text-slate-700">@{outlet?.name.replace(/\s+/g, '').toLowerCase()}_sb</p></div></div><div className="h-px bg-slate-100 my-2"></div><div className="flex items-center gap-3"><div className="w-8 h-8 rounded-full bg-white border border-slate-100 flex items-center justify-center shrink-0 p-1"><svg viewBox="0 0 24 24" className="w-full h-full text-green-600 fill-current"><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="4" fill="white" /></svg></div><div><p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">GoFood</p><p className="text-sm font-bold text-slate-700">{outlet.gofood || outlet.name}</p></div></div><div className="flex items-center gap-3"><div className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center text-white shrink-0 p-1.5"><ShoppingBag className="w-full h-full stroke-white" /></div><div><p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">ShopeeFood</p><p className="text-sm font-bold text-slate-700">{outlet.shopee || outlet.name}</p></div></div><div className="flex items-center gap-3"><div className="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center text-white shrink-0 p-1"><span className="font-bold text-[10px] italic">Grab</span></div><div><p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">GrabFood</p><p className="text-sm font-bold text-slate-700">{outlet.grab || outlet.name}</p></div></div></div></div>
      </div>
    </div>
  );
@@ -267,23 +219,19 @@ export default function App() {
  const [alertInfo, setAlertInfo] = useState({ show: false, title: '', message: '' });
  const [menuAddType, setMenuAddType] = useState(null);
  
- // State Data (dari Supabase)
  const [outlets, setOutlets] = useState([]);
  const [allMenus, setAllMenus] = useState({});
 
  const showAlert = (title, message) => setAlertInfo({ show: true, title, message });
 
- // --- FETCH DATA (READ) ---
  useEffect(() => {
     const fetchData = async () => {
-        // Fetch Outlets
         const { data: outletData, error: outletError } = await supabase.from('outlets').select('*').order('code', { ascending: true });
         if (outletError) console.error(outletError);
         else {
             setOutlets(outletData.map(o => ({ ...o, imageOnline: o.image_url })));
         }
 
-        // Fetch Menus
         const { data: menuData, error: menuError } = await supabase.from('menus').select('*').order('id', { ascending: true });
         if (menuError) console.error(menuError);
         else {
@@ -389,6 +337,7 @@ export default function App() {
     e.preventDefault();
     if (!selectedOutlet) return;
     const isSpecial = menuAddType === 'special';
+    // Logic: Menu Other tidak perlu foto, Menu Special boleh foto
     let imageUrl = isSpecial && newMenu.image ? await uploadImageToSupabase(newMenu.image, 'menus') : null;
 
     const { data, error } = await supabase.from('menus').insert([{
