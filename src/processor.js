@@ -148,11 +148,11 @@ export function processBananaImage(data, width, height) {
       error = "Objek pisang tidak terdeteksi dengan jelas. Pastikan pencahayaan cukup.";
   } else {
       // Rule-Based Classification
-      if (pGreen > pYellow && pGreen > 35) { 
+      if (pGreen > 15) { 
           resultKey = "mentah";
       } else if (pBrown > 15) { 
           resultKey = "lewat_matang";
-      } else {
+      } else if (pYellow > 15) {
           resultKey = "matang";
       }
   }
